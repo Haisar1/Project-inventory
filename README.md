@@ -18,26 +18,27 @@ Antes de comenzar, asegúrate de tener las siguientes herramientas instaladas en
 - **Frontend (Angular)**: Carpeta `/inventory-front`
 
 - 
-### 1. Backend (NestJS) ![NestJS Logo](https://nestjs.com/img/logo_text.svg)
+## 1. Backend (NestJS) ![NestJS Logo](https://nestjs.com/img/logo_text.svg)
 
-##Instalar dependencias
+## Instalar dependencias
 -npm install
 
-##Levanta la base de datos con Docke
+## Levanta la base de datos con Docke
 -docker compose up -d
 
-##Levantar api
+## Levantar api
 -npm run start:dev
 
 ---
-### 2. frontend (Angular) ![Angular Logo](https://angular.io/assets/images/logos/angular/angular.svg)
+## 2. frontend (Angular) ![Angular Logo](https://angular.io/assets/images/logos/angular/angular.svg)
 
 
-##Instalar dependencias
+## Instalar dependencias
 -npm install
 
-##Levantar frontend
+## Levantar frontend
 -ng serve
+
 ---
 
 
