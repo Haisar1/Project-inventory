@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './machines.component.html',
   styleUrls: ['./machines.component.css'],
   standalone: true,
-  imports: [MatProgressSpinnerModule,ReactiveFormsModule,FormsModule,CommonModule]
+  imports: [MatProgressSpinnerModule, ReactiveFormsModule, FormsModule, CommonModule]
 })
 export class MachinesComponent implements OnInit {
 
@@ -21,6 +21,7 @@ export class MachinesComponent implements OnInit {
   filteredMachines: Machine[] = [];
   selectedMachine: Machine | null = null;
   showErrorPopup: boolean = false;
+  errorMessage: string = '';
   showEditPopup: boolean = false;
   showAddForm: boolean = false;
   isLoading: boolean = true;
@@ -33,7 +34,7 @@ export class MachinesComponent implements OnInit {
       model: ['', Validators.required],
       serialNumber: ['', Validators.required],
       location: [''],
-      status: ['']
+      status: ['active']
     });
   }
 
@@ -41,7 +42,8 @@ export class MachinesComponent implements OnInit {
     this.getMachines();
   }
 
-  displayErrorPopup() {
+  displayErrorPopup(message: string) {
+    this.errorMessage = message;
     this.showErrorPopup = true;
   }
 
@@ -52,16 +54,16 @@ export class MachinesComponent implements OnInit {
   getMachines() {
     this.machineService.getMachines().subscribe({
       next: (data) => {
-        console.log("🌕🌘 ~ MachinesComponent ~ this.machineService.getMachines ~ data:", data)
         this.isLoading = false;
         if (Array.isArray(data) && data.length > 0) {
           this.machineList = data;
           this.filteredMachines = data;
         }
       },
-      error: () => {
+      error: (err) => {
         this.isLoading = false;
-        this.displayErrorPopup();
+        const errorMessage = err?.error?.message || 'Error al cargar las máquinas';
+        this.displayErrorPopup(errorMessage);
       }
     });
   }
@@ -76,8 +78,10 @@ export class MachinesComponent implements OnInit {
         this.form.reset();
         this.showAddForm = false;
       },
-      error: () => {
-        this.displayErrorPopup();
+      error: (err) => {
+        const errorMessage = err?.error?.message || 'Error al agregar la máquina';
+        this.displayErrorPopup(errorMessage);
+        this.closePopup();
       }
     });
   }
@@ -88,7 +92,11 @@ export class MachinesComponent implements OnInit {
         this.machineList = this.machineList.filter(x => x.id !== machine.id);
         this.filteredMachines = this.machineList;
       },
-      error: () => { this.displayErrorPopup(); }
+      error: (err) => {
+        const errorMessage = err?.error?.message || 'Error al eliminar la máquina';
+        this.displayErrorPopup(errorMessage);
+        this.closePopup();
+      }
     });
   }
 
@@ -114,7 +122,11 @@ export class MachinesComponent implements OnInit {
         this.selectedMachine = null;
         this.showEditPopup = false;
       },
-      error: () => { this.displayErrorPopup(); }
+      error: (err) => {
+        const errorMessage = err?.error?.message || 'Error al actualizar la máquina';
+        this.displayErrorPopup(errorMessage);
+        this.closePopup();
+      }
     });
   }
 
