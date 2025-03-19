@@ -21,20 +21,23 @@ Antes de comenzar, asegúrate de tener las siguientes herramientas instaladas en
 ### 1. Backend (NestJS) ![NestJS Logo](https://nestjs.com/img/logo_text.svg)
 
 ##Instalar dependencias
-npm install
+-npm install
 
 ##Levanta la base de datos con Docke
-docker compose up -d
+-docker compose up -d
 
 ##Levantar api
-npm run start:dev
+-npm run start:dev
+
 ---
 ### 2. frontend (Angular) ![Angular Logo](https://angular.io/assets/images/logos/angular/angular.svg)
+
+
 ##Instalar dependencias
-npm install
+-npm install
 
 ##Levantar frontend
-ng serve
+-ng serve
 ---
 
 
