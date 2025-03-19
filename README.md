@@ -18,7 +18,7 @@ Antes de comenzar, asegúrate de tener las siguientes herramientas instaladas en
 - **Frontend (Angular)**: Carpeta `/inventory-front`
 
 - 
-## 1. Backend (NestJS) ![NestJS Logo](https://nestjs.com/img/logo_text.svg)
+## 1. Backend (NestJS) <img src="https://nestjs.com/img/logo_text.svg" width="100" />
 
 ## Instalar dependencias
 -npm install
@@ -30,8 +30,7 @@ Antes de comenzar, asegúrate de tener las siguientes herramientas instaladas en
 -npm run start:dev
 
 ---
-## 2. frontend (Angular) ![Angular Logo](https://angular.io/assets/images/logos/angular/angular.svg)
-
+## 2. frontend (Angular) <img src="https://angular.io/assets/images/logos/angular/angular.svg" width="100" />
 
 ## Instalar dependencias
 -npm install
