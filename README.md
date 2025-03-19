@@ -29,8 +29,7 @@ docker compose up -d
 ##Levantar api
 npm run start:dev
 ---
-### 2. frontend (Angular) ![Angular Logo](https://upload.wikimedia.org/wikipedia/commons/a/a7/Angular_logo.svg)
-
+### 2. frontend (Angular) https://angular.io/assets/images/logos/angular/angular.svg
 ##Instalar dependencias
 npm install
 
