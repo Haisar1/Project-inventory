@@ -1,28 +1,39 @@
-import { Machine } from './../../Interfaces/machines';
 import { Component, OnInit, inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { machineService } from '../../Services/machine.service';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Machine } from './../../Interfaces/machines';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: '',
+  selector: 'app-machines',
   templateUrl: './machines.component.html',
   styleUrls: ['./machines.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [MatProgressSpinnerModule,ReactiveFormsModule,FormsModule,CommonModule]
 })
 export class MachinesComponent implements OnInit {
 
   form: FormGroup;
   private machineService = inject(machineService);
   machineList: Machine[] = [];
+  filteredMachines: Machine[] = [];
   selectedMachine: Machine | null = null;
   showErrorPopup: boolean = false;
   showEditPopup: boolean = false;
+  showAddForm: boolean = false;
+  isLoading: boolean = true;
+  searchTerm: string = '';
+  searchCriteria: string = 'name';
 
   constructor(private formBuilder: FormBuilder) {
     this.form = this.formBuilder.group({
-
+      name: ['', Validators.required],
+      model: ['', Validators.required],
+      serialNumber: ['', Validators.required],
+      location: [''],
+      status: ['']
     });
   }
 
@@ -41,12 +52,15 @@ export class MachinesComponent implements OnInit {
   getMachines() {
     this.machineService.getMachines().subscribe({
       next: (data) => {
-        console.log(data);
+        console.log("🌕🌘 ~ MachinesComponent ~ this.machineService.getMachines ~ data:", data)
+        this.isLoading = false;
         if (Array.isArray(data) && data.length > 0) {
           this.machineList = data;
+          this.filteredMachines = data;
         }
       },
-      error: (error) => {
+      error: () => {
+        this.isLoading = false;
         this.displayErrorPopup();
       }
     });
@@ -54,25 +68,27 @@ export class MachinesComponent implements OnInit {
 
   addMachine() {
     const request: Machine = this.form.value;
-    request.id = '0';
 
     this.machineService.add(request).subscribe({
       next: (data) => {
         this.machineList.push(data);
+        this.filteredMachines = this.machineList;
         this.form.reset();
+        this.showAddForm = false;
       },
-      error: (error) => {
+      error: () => {
         this.displayErrorPopup();
       }
     });
   }
 
   deleteMachine(machine: Machine) {
-    this.machineService.delete(Number(machine.id)).subscribe({
+    this.machineService.delete(machine.id).subscribe({
       next: () => {
         this.machineList = this.machineList.filter(x => x.id !== machine.id);
+        this.filteredMachines = this.machineList;
       },
-      error: (error) => { console.error(error); }
+      error: () => { this.displayErrorPopup(); }
     });
   }
 
@@ -85,24 +101,36 @@ export class MachinesComponent implements OnInit {
 
   updateMachine() {
     if (!this.selectedMachine) return;
-    const request: Machine = { ...this.selectedMachine, ...this.form.value };
+    const updatedFields = this.form.value;
 
-    this.machineService.update(Number(this.selectedMachine.id), request).subscribe({
+    this.machineService.patch(this.selectedMachine.id, updatedFields).subscribe({
       next: (data) => {
         const index = this.machineList.findIndex(m => m.id === data.id);
         if (index !== -1) {
-          this.machineList[index] = data;
+          this.machineList[index] = { ...this.machineList[index], ...data };
         }
+        this.filteredMachines = this.machineList;
         this.form.reset();
         this.selectedMachine = null;
         this.showEditPopup = false;
       },
-      error: (error) => { this.displayErrorPopup(); }
+      error: () => { this.displayErrorPopup(); }
     });
   }
 
   closePopup() {
     this.showEditPopup = false;
+    this.showAddForm = false;
     this.form.reset();
+  }
+
+  filterMachines() {
+    if (!this.searchTerm) {
+      this.filteredMachines = this.machineList;
+    } else {
+      this.filteredMachines = this.machineList.filter(machine =>
+        machine[this.searchCriteria]?.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    }
   }
 }

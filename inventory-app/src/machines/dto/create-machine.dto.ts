@@ -1,33 +1,40 @@
 import { IsEnum, IsNotEmpty, IsOptional, Length } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
 import { MachineStatus } from './../entities/machine.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateMachineDto {
-  @ApiProperty({ description: 'Nombre de la máquina', maxLength: 100 })
+  @ApiProperty({
+    example: 'Excavator 3000',
+    description: 'The name of the machine',
+  })
   @IsNotEmpty()
   @Length(1, 100)
   name: string;
 
-  @ApiProperty({ description: 'Modelo de la máquina', maxLength: 50 })
+  @ApiProperty({ example: 'XK-200', description: 'The model of the machine' })
   @IsNotEmpty()
   @Length(1, 50)
   model: string;
 
   @ApiProperty({
-    description: 'Número de serie de la máquina',
+    example: 'ABC12345',
+    description: 'Unique serial number',
     uniqueItems: true,
   })
   @IsNotEmpty()
   serialNumber: string;
 
-  @ApiProperty({ description: 'Ubicación de la máquina', required: false })
+  @ApiProperty({
+    example: 'Warehouse A',
+    description: 'Location of the machine',
+  })
   @IsOptional()
   location?: string;
 
   @ApiProperty({
+    example: 'active',
+    description: 'Machine status',
     enum: MachineStatus,
-    description: 'Estado de la máquina',
-    required: false,
   })
   @IsEnum(MachineStatus)
   @IsOptional()

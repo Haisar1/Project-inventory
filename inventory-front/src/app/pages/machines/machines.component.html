@@ -1,0 +1,134 @@
+<div class="container mt-4">
+  <h2 class="text-center">Gestión de Máquinas</h2>
+
+  <div class="search-container">
+    <select class="form-control mb-3" [(ngModel)]="searchCriteria">
+      <option value="name">Buscar por Nombre</option>
+      <option value="model">Buscar por Modelo</option>
+      <option value="status">Buscar por Estado</option>
+    </select>
+
+    <input type="text" class="form-control" placeholder="Buscar..." [(ngModel)]="searchTerm" (input)="filterMachines()">
+  </div>
+
+  <div *ngIf="isLoading" class="text-center mt-3">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <table class="table table-striped mt-3">
+      <thead class="table-dark">
+        <tr>
+          <th>Nombre</th>
+          <th>Modelo</th>
+          <th>Número de Serie</th>
+          <th>Ubicación</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let machine of filteredMachines">
+          <td>{{ machine.name }}</td>
+          <td>{{ machine.model }}</td>
+          <td>{{ machine.serialNumber }}</td>
+          <td>{{ machine.location || 'N/A' }}</td>
+          <td>
+            <span class="badge" [ngClass]="{'bg-success': machine.status === 'Activo', 'bg-danger': machine.status === 'Inactivo'}">
+              {{ machine.status }}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-icon" (click)="selectMachine(machine)">
+              <img src="https://img.icons8.com/ios-filled/20/000000/edit.png" alt="Editar"/>
+            </button>
+            <button class="btn btn-icon" (click)="deleteMachine(machine)">
+              <img src="https://img.icons8.com/ios-filled/20/000000/trash.png" alt="Eliminar"/>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button class="btn btn-primary" (click)="showAddForm = true"> Agregar Máquina</button>
+
+  <div *ngIf="showErrorPopup" class="modal-overlay">
+    <div class="modal-content error-popup">
+      <button (click)="closeErrorPopup()" class="close-btn">&times;</button>
+      <p class="error-message">Ocurrió un error. Inténtalo de nuevo.</p>
+    </div>
+  </div>
+
+  <div *ngIf="showAddForm" class="modal-overlay">
+    <div class="modal-content add-machine">
+      <h3>Agregar Máquina</h3>
+      <form [formGroup]="form" (ngSubmit)="addMachine()">
+        <div class="mb-3">
+          <label>Nombre</label>
+          <input type="text" class="form-control" formControlName="name" required [ngClass]="{'is-invalid': form.get('name')?.invalid && form.get('name')?.touched}">
+          <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-danger">Campo obligatorio</div>
+        </div>
+        <div class="mb-3">
+          <label>Modelo</label>
+          <input type="text" class="form-control" formControlName="model" required [ngClass]="{'is-invalid': form.get('model')?.invalid && form.get('model')?.touched}">
+          <div *ngIf="form.get('model')?.invalid && form.get('model')?.touched" class="text-danger">Campo obligatorio</div>
+        </div>
+        <div class="mb-3">
+          <label>Número de Serie</label>
+          <input type="text" class="form-control" formControlName="serialNumber" required [ngClass]="{'is-invalid': form.get('serialNumber')?.invalid && form.get('serialNumber')?.touched}">
+          <div *ngIf="form.get('serialNumber')?.invalid && form.get('serialNumber')?.touched" class="text-danger">Campo obligatorio</div>
+        </div>
+        <div class="mb-3">
+          <label>Ubicación (opcional)</label>
+          <input type="text" class="form-control" formControlName="location" [ngClass]="{'is-invalid': form.get('location')?.invalid && form.get('location')?.touched}">
+        </div>
+        <div class="mb-3">
+          <label>Estado</label>
+          <select class="form-control" formControlName="status" [ngClass]="{'is-invalid': form.get('status')?.invalid && form.get('status')?.touched}">
+            <option value="active">Activo</option>
+            <option value="inactive">Inactivo</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-success" [disabled]="!form.valid">Guardar</button>
+        <button type="button" class="btn btn-secondary" (click)="closePopup()">Cancelar</button>
+      </form>
+    </div>
+  </div>
+
+  <div *ngIf="showEditPopup" class="modal-overlay">
+    <div class="modal-content edit-machine">
+      <h3>Editar Máquina</h3>
+      <form [formGroup]="form" (ngSubmit)="updateMachine()">
+        <div class="mb-3">
+          <label>Nombre</label>
+          <input type="text" class="form-control" formControlName="name" required [ngClass]="{'is-invalid': form.get('name')?.invalid && form.get('name')?.touched}">
+          <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-danger">Campo obligatorio</div>
+        </div>
+        <div class="mb-3">
+          <label>Modelo</label>
+          <input type="text" class="form-control" formControlName="model" required [ngClass]="{'is-invalid': form.get('model')?.invalid && form.get('model')?.touched}">
+          <div *ngIf="form.get('model')?.invalid && form.get('model')?.touched" class="text-danger">Campo obligatorio</div>
+        </div>
+        <div class="mb-3">
+          <label>Número de Serie</label>
+          <input type="text" class="form-control" formControlName="serialNumber" required [ngClass]="{'is-invalid': form.get('serialNumber')?.invalid && form.get('serialNumber')?.touched}">
+          <div *ngIf="form.get('serialNumber')?.invalid && form.get('serialNumber')?.touched" class="text-danger">Campo obligatorio</div>
+        </div>
+        <div class="mb-3">
+          <label>Ubicación (opcional)</label>
+          <input type="text" class="form-control" formControlName="location" [ngClass]="{'is-invalid': form.get('location')?.invalid && form.get('location')?.touched}">
+        </div>
+        <div class="mb-3">
+          <label>Estado</label>
+          <select class="form-control" formControlName="status" [ngClass]="{'is-invalid': form.get('status')?.invalid && form.get('status')?.touched}">
+            <option value="active">Activo</option>
+            <option value="inactive">Inactivo</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-success" [disabled]="!form.valid">Actualizar</button>
+        <button type="button" class="btn btn-secondary" (click)="closePopup()">Cancelar</button>
+      </form>
+    </div>
+  </div>
+</div>

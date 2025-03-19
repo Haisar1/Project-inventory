@@ -1,13 +1,9 @@
-import { EnvConfiguration } from './config/env.config';
-
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { MachinesModule } from './machines/machines.module';
+import { EnvConfiguration } from './config/env.config';
 import { JoiValidationSchema } from './config/joi.validation';
-import { Machine } from './machines/entities/machine.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -23,12 +19,11 @@ import { Machine } from './machines/entities/machine.entity';
       username: EnvConfiguration().dbUsername,
       password: EnvConfiguration().dbPassword,
       autoLoadEntities: true,
-      entities: [Machine],
       synchronize: true,
     }),
-
+    MachinesModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

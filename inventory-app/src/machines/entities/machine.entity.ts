@@ -1,8 +1,11 @@
+import { MaxLength, IsEnum } from 'class-validator';
 import {
-  Entity,
-  PrimaryGeneratedColumn,
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
@@ -17,24 +20,47 @@ export class Machine {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ length: 100 })
+  @Column('text')
+  @MaxLength(100)
   name: string;
 
-  @Column({ length: 50 })
+  @Column('text')
+  @MaxLength(50)
   model: string;
 
-  @Column({ unique: true })
+  @Column('text', { unique: true })
   serialNumber: string;
 
-  @Column({ nullable: true })
-  location: string;
+  @Column('text', { nullable: true })
+  location: string | null;
 
-  @Column({ type: 'enum', enum: MachineStatus })
+  @Column({
+    type: 'enum',
+    enum: MachineStatus,
+    default: MachineStatus.ACTIVE,
+  })
+  @IsEnum(MachineStatus)
   status: MachineStatus;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
+
+  @BeforeInsert()
+  checkFieldsBeforeInsert() {
+    this.serialNumber = this.serialNumber.toLowerCase().trim();
+    if (this.location === '') {
+      this.location = null;
+    }
+    if (!Object.values(MachineStatus).includes(this.status)) {
+      this.status = MachineStatus.ACTIVE; 
+    }
+  }
+
+  @BeforeUpdate()
+  checkFieldsBeforeUpdate() {
+    this.checkFieldsBeforeInsert();
+  }
 }
