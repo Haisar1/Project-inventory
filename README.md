@@ -1,7 +1,9 @@
 # Project-inventory
 
 Este proyecto incluye un **backend** desarrollado con **NestJS**, un **frontend** desarrollado con **Angular**, y una base de datos **PostgreSQL** gestionada a través de Docker.
-Documentacion de Api con Swagger
+
+## Documentacion de Api con Swagger
+- url asignada en .en - HOST_API example http://localhost:3000/api
 
 ## Requisitos Previos
 

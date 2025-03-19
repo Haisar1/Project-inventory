@@ -64,17 +64,17 @@
       <h3>Agregar Máquina</h3>
       <form [formGroup]="form" (ngSubmit)="addMachine()">
         <div class="mb-3">
-          <label>Nombre</label>
+          <label>Nombre <span class="text-danger">*</span></label>
           <input type="text" class="form-control text-center" formControlName="name" required [ngClass]="{'is-invalid': form.get('name')?.invalid && form.get('name')?.touched}">
           <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-danger">Campo obligatorio</div>
         </div>
         <div class="mb-3">
-          <label>Modelo</label>
+          <label>Modelo <span class="text-danger">*</span></label>
           <input type="text" class="form-control text-center" formControlName="model" required [ngClass]="{'is-invalid': form.get('model')?.invalid && form.get('model')?.touched}">
           <div *ngIf="form.get('model')?.invalid && form.get('model')?.touched" class="text-danger">Campo obligatorio</div>
         </div>
         <div class="mb-3">
-          <label>Número de Serie</label>
+          <label>Número de Serie <span class="text-danger">*</span></label>
           <input type="text" class="form-control text-center" formControlName="serialNumber" required [ngClass]="{'is-invalid': form.get('serialNumber')?.invalid && form.get('serialNumber')?.touched}">
           <div *ngIf="form.get('serialNumber')?.invalid && form.get('serialNumber')?.touched" class="text-danger">Campo obligatorio</div>
         </div>
@@ -100,17 +100,17 @@
       <h3>Editar Máquina</h3>
       <form [formGroup]="form" (ngSubmit)="updateMachine()">
         <div class="mb-3">
-          <label>Nombre</label>
+          <label>Nombre <span class="text-danger">*</span></label>
           <input type="text" class="form-control text-center" formControlName="name" required [ngClass]="{'is-invalid': form.get('name')?.invalid && form.get('name')?.touched}">
           <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-danger">Campo obligatorio</div>
         </div>
         <div class="mb-3">
-          <label>Modelo</label>
+          <label>Modelo <span class="text-danger">*</span></label>
           <input type="text" class="form-control text-center" formControlName="model" required [ngClass]="{'is-invalid': form.get('model')?.invalid && form.get('model')?.touched}">
           <div *ngIf="form.get('model')?.invalid && form.get('model')?.touched" class="text-danger">Campo obligatorio</div>
         </div>
         <div class="mb-3">
-          <label>Número de Serie</label>
+          <label>Número de Serie <span class="text-danger">*</span></label>
           <input type="text" class="form-control text-center" formControlName="serialNumber" required [ngClass]="{'is-invalid': form.get('serialNumber')?.invalid && form.get('serialNumber')?.touched}">
           <div *ngIf="form.get('serialNumber')?.invalid && form.get('serialNumber')?.touched" class="text-danger">Campo obligatorio</div>
         </div>
